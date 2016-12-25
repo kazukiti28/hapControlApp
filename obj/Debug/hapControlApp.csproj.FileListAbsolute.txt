@@ -1,0 +1,6 @@
+c:\users\kazuki\documents\visual studio 2015\Projects\hapControlApp\hapControlApp\bin\Debug\hapControlApp.exe.config
+c:\users\kazuki\documents\visual studio 2015\Projects\hapControlApp\hapControlApp\bin\Debug\hapControlApp.exe
+c:\users\kazuki\documents\visual studio 2015\Projects\hapControlApp\hapControlApp\bin\Debug\hapControlApp.pdb
+c:\users\kazuki\documents\visual studio 2015\Projects\hapControlApp\hapControlApp\obj\Debug\hapControlApp.csprojResolveAssemblyReference.cache
+c:\users\kazuki\documents\visual studio 2015\Projects\hapControlApp\hapControlApp\obj\Debug\hapControlApp.exe
+c:\users\kazuki\documents\visual studio 2015\Projects\hapControlApp\hapControlApp\obj\Debug\hapControlApp.pdb
