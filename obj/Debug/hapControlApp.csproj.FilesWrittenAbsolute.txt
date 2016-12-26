@@ -1,0 +1,6 @@
+/Users/Anzu/GitHub/hapControlApp/obj/Debug/.NETFramework,Version=v4.6.AssemblyAttribute.cs
+/Users/Anzu/GitHub/hapControlApp/bin/Debug/hapControlApp.exe.config
+/Users/Anzu/GitHub/hapControlApp/bin/Debug/hapControlApp.exe.mdb
+/Users/Anzu/GitHub/hapControlApp/bin/Debug/hapControlApp.exe
+/Users/Anzu/GitHub/hapControlApp/obj/Debug/hapControlApp.exe
+/Users/Anzu/GitHub/hapControlApp/obj/Debug/hapControlApp.exe.mdb
