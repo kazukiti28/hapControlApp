@@ -20,7 +20,7 @@ namespace hapControlApp
             setJunbi(cmd);
         }
 
-		static void connectHap(dynamic json,string url)
+		static void connectHap(dynamic json,string url)//帰ってきたJSONが意味をなさないやつはこれ
 		{
 			HttpClient client = new HttpClient();
 			string setUrl = "http://192.168.0.2:60200/sony/" + url;
