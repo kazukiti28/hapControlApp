@@ -8,6 +8,7 @@ namespace hapControlApp
 {
 	class Program
 	{
+        public static int nowVolume = 0;
 		static void Main(string[] args)
 		{
             Console.Title = "HAPControleApp";
@@ -36,13 +37,26 @@ namespace hapControlApp
 			StringContent theContent = new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded");
 			string result = client.PostAsync(Url, theContent).Result.Content.ReadAsStringAsync().Result;//送信はここ
 			Console.WriteLine(result);
-			if (isNeedParse == 1)
+			if (isNeedParse == 1)//音量取り出し後に戻るやつ
 			{
 				string str = @"""volume"":";
-				int ind = result.IndexOf();
-				string volumeParam = result.Substring();
-
-			}
+				int ind = result.IndexOf(str);
+				string volumeParam = result.Substring(ind,12);
+                int leng = volumeParam.Length;
+                string volume;
+                if (0 <= volumeParam.IndexOf(","))
+                {//,が含まれている=ボリュームが一桁
+                    volume = volumeParam.Substring(leng - 2,1);
+                    Console.WriteLine(volume);
+                }
+                else
+                {//含まれていない=ボリュームが二桁
+                    volume = volumeParam.Substring(leng - 2, 2);
+                    Console.WriteLine(volume);
+                }
+                int ivol = Int32.Parse(volume);
+                nowVolume = ivol;
+            }
 			else
 			{
 				inputCmd();//parseが必要ない場合のみinputへ戻る
@@ -131,47 +145,57 @@ namespace hapControlApp
 			}
 			if (mode == "volumeup")
 			{
-				var getVolumeObj = new//JSON生成
-				{
-					@params = new[] { new { } },
-					method = "getVolumeInformation",
-					version = "1.1",
-					id = 4,
-				};
-				url = "audio";
-				serializeJson(getVolumeObj, url, 1);
-
-				var obj = new//JSON生成
+                dynamic getVolumeObj = getVolumeInfo();
+                url = "audio";
+                serializeJson(getVolumeObj, url, 1);//ここまで現情報取得
+                nowVolume += 1;//ここから現ボリュームに1足した値をJSONで送信
+                string upvolume = nowVolume.ToString();
+				var obj = new
 				{
 					@params = new[] {
 						new {
-							volume = "+1",
+							volume = upvolume,
 						}
 					},
 					method = "setAudioVolume",
 					version = "1.0",
 					id = 1,
 				};
-				url = "audio";
 				serializeJson(obj,url,0);
 			}
 			if (mode == "volumedown")
 			{
-				var obj = new//JSON生成
+                dynamic getVolumeObj = getVolumeInfo();
+                url = "audio";
+                serializeJson(getVolumeObj, url, 1);
+                nowVolume -= 1;
+                string downvolume = nowVolume.ToString();
+                var obj = new
 				{
 					@params = new[] {
 						new {
-							volume = "-1",
+							volume = downvolume,
 						}
 					},
 					method = "setAudioVolume",
 					version = "1.0",
 					id = 1,
 				};
-				url = "audio";
 				serializeJson(obj, url, 0);
 			}
 		}
+
+        static dynamic getVolumeInfo()
+        {//音量調節の下準備のための
+            var getVolumeObj = new
+            {
+                @params = new[] { new { } },
+                method = "getVolumeInformation",
+                version = "1.1",
+                id = 4,
+            };
+            return getVolumeObj;
+        }
 	}
 
 	public class setJson
