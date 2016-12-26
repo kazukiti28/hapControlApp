@@ -10,9 +10,15 @@ namespace hapControlApp
 	{
 		static void Main(string[] args)
 		{
-			string cmd = Console.ReadLine();
-			setJunbi(cmd);
+            Console.Title = "HAPControleApp";
+            inputCmd();
 		}
+
+        static void inputCmd()
+        {
+            string cmd = Console.ReadLine();
+            setJunbi(cmd);
+        }
 
 		static void connectHap(dynamic json,string url)
 		{
@@ -30,7 +36,7 @@ namespace hapControlApp
 			StringContent theContent = new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded");
 			var result = client.PostAsync(Url, theContent).Result.Content.ReadAsStringAsync().Result;//送信はここ
 			Console.WriteLine(result);
-			Console.ReadKey();
+            inputCmd();
 		}
 
 		static void serializeJson(dynamic obje,string url)
@@ -90,7 +96,7 @@ namespace hapControlApp
 				url = "system";
 				serializeJson(obj,url);
 			}
-			if (mode == "start"/* || mode == "stop"*/)//再生制御(停止は不明)
+			if (mode == "start" || mode == "stop")//再生停止制御
 			{
 				var obj = new//JSON生成
 				{
