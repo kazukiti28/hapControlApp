@@ -20,7 +20,7 @@ namespace hapControlApp
             setJunbi(cmd);
         }
 
-		static void connectHap(dynamic json,string url)//帰ってきたJSONが意味をなさないやつはこれ
+		static void connectHap(dynamic json,string url,int isNeedParse)//帰ってきたJSONが意味をなさないやつはこれ
 		{
 			HttpClient client = new HttpClient();
 			string setUrl = "http://192.168.0.2:60200/sony/" + url;
@@ -34,17 +34,26 @@ namespace hapControlApp
 			client.DefaultRequestHeaders.Add("Origin", "http://192.168.0.2:60100");//ここまで要らない
 			client.DefaultRequestHeaders.ExpectContinue = false;//これは絶対いる
 			StringContent theContent = new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded");
-			var result = client.PostAsync(Url, theContent).Result.Content.ReadAsStringAsync().Result;//送信はここ
+			string result = client.PostAsync(Url, theContent).Result.Content.ReadAsStringAsync().Result;//送信はここ
 			Console.WriteLine(result);
-            inputCmd();
+			if (isNeedParse == 1)
+			{
+				string str = @"""volume"":";
+				int ind = result.IndexOf();
+				string volumeParam = result.Substring();
+
+			}
+			else
+			{
+				inputCmd();//parseが必要ない場合のみinputへ戻る
+			}
 		}
 
-		static void serializeJson(dynamic obje,string url)
+		static void serializeJson(dynamic obje,string url,int isNeedParse)
 		{
 			var json = DynamicJson.Serialize(obje);
-			connectHap(json,url);
+			connectHap(json,url,isNeedParse);
 		}
-
 
 		static void setJunbi(string mode)
 		{
@@ -60,7 +69,7 @@ namespace hapControlApp
 				};
 
 				url = "avContent";
-				serializeJson(obj,url);
+				serializeJson(obj,url,0);
 			}
 			if (mode == "poweron")//電源オン
 			{
@@ -77,7 +86,7 @@ namespace hapControlApp
 					id = 1,
 				};
 				url = "system";
-				serializeJson(obj,url);
+				serializeJson(obj,url,0);
 			}
 			if (mode == "poweroff")//電源オフ
 			{
@@ -94,7 +103,7 @@ namespace hapControlApp
 					id = 1,
 				};
 				url = "system";
-				serializeJson(obj,url);
+				serializeJson(obj,url,0);
 			}
 			if (mode == "start" || mode == "stop")//再生停止制御
 			{
@@ -106,7 +115,7 @@ namespace hapControlApp
 					id = 1,
 				};
 				url = "avContent";
-				serializeJson(obj,url);
+				serializeJson(obj,url,0);
 			}
 			if (mode == "next")//次の曲へ
 			{
@@ -118,10 +127,20 @@ namespace hapControlApp
 					id = 1,
 				};
 				url = "avContent";
-				serializeJson(obj,url);
+				serializeJson(obj,url,0);
 			}
 			if (mode == "volumeup")
 			{
+				var getVolumeObj = new//JSON生成
+				{
+					@params = new[] { new { } },
+					method = "getVolumeInformation",
+					version = "1.1",
+					id = 4,
+				};
+				url = "audio";
+				serializeJson(getVolumeObj, url, 1);
+
 				var obj = new//JSON生成
 				{
 					@params = new[] {
@@ -134,7 +153,7 @@ namespace hapControlApp
 					id = 1,
 				};
 				url = "audio";
-				serializeJson(obj,url);
+				serializeJson(obj,url,0);
 			}
 			if (mode == "volumedown")
 			{
@@ -150,7 +169,7 @@ namespace hapControlApp
 					id = 1,
 				};
 				url = "audio";
-				serializeJson(obj, url);
+				serializeJson(obj, url, 0);
 			}
 		}
 	}
